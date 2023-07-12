@@ -5,9 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Infrastructure.Security
+namespace Core.Infrastructure.Identity
 {
-    public class AppRole :IdentityRole<int>
+    public class AppUser : IdentityUser<string>
     {
+        public string NameSurname { get; set; }
+
+
     }
 }

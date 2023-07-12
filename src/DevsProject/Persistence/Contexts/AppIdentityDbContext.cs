@@ -1,4 +1,4 @@
-﻿using Core.Infrastructure.Security;
+﻿using Core.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Persistence.Contexts
 {
-    public class AppIdentityDbContext : IdentityDbContext<AppUser,AppRole,int>
+    public class AppIdentityDbContext : IdentityDbContext<AppUser,AppRole,string>
     {
         public AppIdentityDbContext(DbContextOptions<AppIdentityDbContext> options) : base(options)
         {

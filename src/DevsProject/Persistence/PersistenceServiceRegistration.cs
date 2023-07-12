@@ -1,7 +1,5 @@
 ﻿using Application.Services.Repositories;
-using Core.Infrastructure.Security;
-using Core.Infrastructure.Services;
-using IdentityServer4.Services;
+using Core.Infrastructure.Identity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -22,47 +20,28 @@ namespace Persistence
         public static IServiceCollection AddIdentityServerConfig(this IServiceCollection services,
                                                                 IConfiguration configuration)
         {
+            services.AddDbContext<AppIdentityDbContext>(options =>
+                                                    options.UseSqlServer(
+                                                        configuration.GetConnectionString("DefaultConnection")));
+
             //User ve Role ile alakalı kısıtlamalar  
             services.AddIdentity<AppUser, AppRole>(options =>
             {
                 options.User.RequireUniqueEmail = true; //Email adresi unique olsun
                 options.Password.RequiredLength = 0;
                 options.Password.RequiredUniqueChars = 0;
-                options.Password.RequireLowercase=false;
-                options.Password.RequireUppercase=false;
-                options.Password.RequireDigit=false;    
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireDigit = false;
                 options.Password.RequireNonAlphanumeric = false;
                 options.User.AllowedUserNameCharacters = "abcçdefghiıjklmnoöpqrsştuüvwxyzABCÇDEFGHIİJKLMNOÖPQRSŞTUÜVWXYZ0123456789-._@+'#!/^%{}*";
 
             }).AddEntityFrameworkStores<AppIdentityDbContext>()
               .AddDefaultTokenProviders();
-
-            services.AddIdentityServer()
-                    .AddDeveloperSigningCredential()
-                    .AddOperationalStore(options =>
-                    {
-                        options.ConfigureDbContext = builder => builder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
-                        options.EnableTokenCleanup = true;   ///süresi dolan tokenları atomatik temizler
-                    })
-                    .AddAspNetIdentity<AppUser>();
+           
             return services;
         }
 
-        
-        public static IServiceCollection AddServices<TUser>(this IServiceCollection services) where TUser : IdentityUser<int>, new()
-        {
-            services.AddTransient<IProfileService, IdentityClaimsProfileService>();
-            return services;
-        }
-
-        //Database configuration:
-        public static IServiceCollection AddDatabaseConfiguration(this IServiceCollection services, string connectionString)
-        {
-            services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(connectionString));
-            services.AddDbContext<AppPersistedGrantDbContext>(options => options.UseSqlServer(connectionString));
-            services.AddDbContext<AppConfigurationDbContext>(options => options.UseSqlServer(connectionString));
-            return services;
-        }
 
     }
 }
