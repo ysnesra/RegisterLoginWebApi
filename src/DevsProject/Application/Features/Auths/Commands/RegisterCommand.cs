@@ -39,6 +39,7 @@ namespace Application.Features.Auths.Commands
 
             public async Task<UserForRegisterDto> Handle(RegisterCommand request, CancellationToken cancellationToken)
             {
+                UserForRegisterDto createdUserDto = new UserForRegisterDto();
                 AppUser existEmail = await _userManager.FindByEmailAsync(request.Email);
                 if(existEmail != null)
                 {
@@ -48,13 +49,17 @@ namespace Application.Features.Auths.Commands
                 AppUser newUser = _mapper.Map<AppUser>(request);
                 newUser.Id=Guid.NewGuid().ToString();
 
-                IdentityResult createdUser = await _userManager.CreateAsync(newUser);
-
-                UserForRegisterDto createdUserDto = _mapper.Map<UserForRegisterDto>(createdUser);
-
-                if (createdUserDto == null)
+                IdentityResult createdUser = await _userManager.CreateAsync(newUser,request.Password);
+                var error = createdUser.Errors;
+             
+                if (createdUser.Succeeded)
                 {
-                    throw new RegisterFailedException(); //Kullanıcı üye olamadı hatası verir
+                    var user = await _userManager.FindByEmailAsync(request.Email);  
+                     createdUserDto = _mapper.Map<UserForRegisterDto>(user);                 
+                }
+                else
+                {
+                    throw new RegisterFailedException();
                 }
                 return createdUserDto;
             }

@@ -14,6 +14,7 @@ namespace WebApi.Controller
         {
             //burdaki Request ControllerBase den gelir.
             //Request in Headerlarından "X-Forwarded-For" etiketini içeriyorsa bunu dönder yoksa HttpContext de mapleme yaparak IpAddress i oluşturup döner
+
             if (Request.Headers.ContainsKey("X-Forwarded-For")) return Request.Headers["X-Forwarded-For"];
             return HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString();
         }

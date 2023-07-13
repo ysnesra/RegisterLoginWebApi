@@ -1,3 +1,4 @@
+using Application;
 using Microsoft.OpenApi.Models;
 using Persistence;
 
@@ -7,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddIdentityServerConfig(builder.Configuration);
- 
+builder.Services.AddApplicationServices();
 
 //Swagger'a Authorize butonunu ekleme
 builder.Services.AddSwaggerGen(opt =>

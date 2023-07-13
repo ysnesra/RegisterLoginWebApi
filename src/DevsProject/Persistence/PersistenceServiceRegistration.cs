@@ -30,8 +30,8 @@ namespace Persistence
                 options.User.RequireUniqueEmail = true; //Email adresi unique olsun
                 options.Password.RequiredLength = 6; //Password en az 6 karakter olsun
                 options.Password.RequiredUniqueChars = 0;
-                options.Password.RequireLowercase = true; //Password küçük harf duyarlı olsun
-                options.Password.RequireUppercase = true; 
+                //options.Password.RequireLowercase = true; //Password küçük harf duyarlı olsun
+                //options.Password.RequireUppercase = true; 
                 options.Password.RequireDigit = false;
                 options.Password.RequireNonAlphanumeric = false;
                 options.User.AllowedUserNameCharacters = "abcçdefghiıjklmnoöpqrsştuüvwxyzABCÇDEFGHIİJKLMNOÖPQRSŞTUÜVWXYZ0123456789-._@+'#!/^%{}*";

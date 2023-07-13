@@ -14,13 +14,7 @@ namespace WebApi.Controller
     [ApiController]
     public class AuthController : BaseController
     {
-        protected UserManager<AppUser> _userManager { get; }
-
-        public AuthController(UserManager<AppUser> userManager)
-        {
-            _userManager = userManager;
-        }
-
+        
         /// <summary>
         /// Kullanıcı kayıt işlemini yapar.
         /// </summary>
