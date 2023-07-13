@@ -3,11 +3,14 @@ using Application.Features.Auths.Rules;
 using Application.Services.AuthService;
 using Application.Services.Repositories;
 using AutoMapper;
+using Core.CrossCuttingConcerns.Exceptions;
+using Core.Infrastructure.Identity;
 using Core.Security.Dtos;
 using Core.Security.Entities;
 using Core.Security.Hashing;
 using Core.Security.JWT;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,52 +19,44 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Auths.Commands
 {
-    public class RegisterCommand : IRequest<RegisteredDto>
-    {
-        public UserForRegisterDto UserForRegisterDto { get; set; }
-        public string IpAddress { get; set; }
+    public class RegisterCommand : IRequest<UserForRegisterDto>
+    { 
+        public string NameSurname { get; set; }
+        public string Username { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
 
-        public class RegisterCommandHandler : IRequestHandler<RegisterCommand, RegisteredDto>
+        public class RegisterCommandHandler : IRequestHandler<RegisterCommand, UserForRegisterDto>
         {
-            private readonly AuthBusinessRules _authBusinessRules;
-            private readonly IUserRepository _userRepository;
+            private readonly UserManager<AppUser> _userManager;
             private readonly IMapper _mapper;
-            private readonly IAuthService _authService;
 
-            public RegisterCommandHandler(AuthBusinessRules authBusinessRules, IUserRepository userRepository, IMapper mapper, IAuthService authService)
+            public RegisterCommandHandler(UserManager<AppUser> userManager, IMapper mapper)
             {
-                _authBusinessRules = authBusinessRules;
-                _userRepository = userRepository;
+                _userManager = userManager;
                 _mapper = mapper;
-                _authService = authService;
             }
 
-            public async Task<RegisteredDto> Handle(RegisterCommand request, CancellationToken cancellationToken)
+            public async Task<UserForRegisterDto> Handle(RegisterCommand request, CancellationToken cancellationToken)
             {
-                await _authBusinessRules.EmailCanNotBeDuplicatedWhenRegistered(request.UserForRegisterDto.Email);
-
-                byte[] passwordHash, passwordSalt;
-                HashingHelper.CreatePasswordHash(request.UserForRegisterDto.Password, out passwordHash, out passwordSalt);
-
-                User newUser = _mapper.Map<User>(request.UserForRegisterDto);
-                newUser.PasswordHash= passwordHash;
-                newUser.PasswordSalt= passwordSalt; 
-                newUser.Status=true;
-
-                User createdUser = await _userRepository.AddAsync(newUser);
-
-                AccessToken createdAccessToken = await _authService.CreateAccessToken(createdUser);
-                RefreshToken createdRefreshToken =
-                    await _authService.CreateRefreshToken(createdUser, request.IpAddress);
-                RefreshToken addedRefreshToken = await _authService.AddRefreshToken(createdRefreshToken);
-
-                RegisteredDto registeredDto = new()
+                AppUser existEmail = await _userManager.FindByEmailAsync(request.Email);
+                if(existEmail != null)
                 {
-                    AccessToken = createdAccessToken,
-                    RefreshToken = addedRefreshToken
-                };
+                    throw new EmailCanNotBeDuplicated(); //Email Tekrar girilemez hatası
+                }
 
-                return registeredDto;
+                AppUser newUser = _mapper.Map<AppUser>(request);
+                newUser.Id=Guid.NewGuid().ToString();
+
+                IdentityResult createdUser = await _userManager.CreateAsync(newUser);
+
+                UserForRegisterDto createdUserDto = _mapper.Map<UserForRegisterDto>(createdUser);
+
+                if (createdUserDto == null)
+                {
+                    throw new RegisterFailedException(); //Kullanıcı üye olamadı hatası verir
+                }
+                return createdUserDto;
             }
         }
     }

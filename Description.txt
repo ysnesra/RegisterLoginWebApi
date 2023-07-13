@@ -1,0 +1,28 @@
+Register ve Login Formu Projesi
+
+CQRS tasarýmý ile MediatR kütüphanesini kullandýðým WebAPI projesidir.
+DDD(Domain Dream Development) Tekniði ile Onion Architecture mimarisi kullanýlmýþtýr.
+IdentityServer yapýsý ve Hangfire kullanýlarak Authenticate iþlemi yapýlmýþtýr.
+
+**************************
+Core.Infrastructure -> Identity klasörüne-> AppRole ve AppUser entityleri oluþturuldu.
+    AppRole: IdentityRole Identity sýnýfýndan inherit edildi
+    AppUser: IdentityUser Identity sýnýfýndan inherit edildi
+
+DevsProject -> Persistence -> Contexts içine -> AppIdentityDbContext tanýmlandý.
+
+PersistenceServiceRegistration.cs extension clasýna -> AddIdentityServerConfig servisi oluþturularak configuration yapýldý,
+Bu servis program.cs'ye de tanýmlandý.
+
+**************************
+Kullanýcý Register olma:
+Application-> Auths-> RegisterCommand oluþturuldu.
+IdentityServer ýn UserManager servisi kullanýlarak kullanýcý iþlemleri yapýldý.
+
+Excetion hatalarýný özelleþtirildi:
+Core.CrossCuttingConcerns -> Exceptions klasöründe 
+RegisterFailedException ve EmailCanNotBeDuplicated Exception classlarýyla hata ile ilgili açýklama mesaj yazýldý.
+AuthController'da Register operasyonu oluþturuldu.
+
+
+

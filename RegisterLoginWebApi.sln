@@ -4,30 +4,33 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5115C5B5-8566-42AF-A6B2-9B71B29E5CD9}"
+	ProjectSection(SolutionItems) = preProject
+		Description.txt = Description.txt
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CorePackages", "CorePackages", "{E2B53A13-11D5-480C-B9CE-F19EE15932BD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevsProject", "DevsProject", "{1192D6BE-C6A2-4F95-9134-55F74B992865}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Application", "src\CorePackages\Core.Application\Core.Application.csproj", "{42AED5A8-6C62-4432-A26C-975E44C71067}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Application", "src\CorePackages\Core.Application\Core.Application.csproj", "{42AED5A8-6C62-4432-A26C-975E44C71067}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.CrossCuttingConcerns", "src\CorePackages\Core.CrossCuttingConcerns\Core.CrossCuttingConcerns.csproj", "{AC9192CB-0886-441F-95FB-C1B62284A5E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.CrossCuttingConcerns", "src\CorePackages\Core.CrossCuttingConcerns\Core.CrossCuttingConcerns.csproj", "{AC9192CB-0886-441F-95FB-C1B62284A5E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Infrastructure", "src\CorePackages\Core.Infrastructure\Core.Infrastructure.csproj", "{51791A6F-4C86-46AE-A33A-EDA4ED96ED62}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Infrastructure", "src\CorePackages\Core.Infrastructure\Core.Infrastructure.csproj", "{51791A6F-4C86-46AE-A33A-EDA4ED96ED62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Persistence", "src\CorePackages\Core.Persistence\Core.Persistence.csproj", "{D43F83C3-57FE-4EAF-A948-BB65B7D5E176}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Persistence", "src\CorePackages\Core.Persistence\Core.Persistence.csproj", "{D43F83C3-57FE-4EAF-A948-BB65B7D5E176}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Security", "src\CorePackages\Core.Security\Core.Security.csproj", "{C205272D-AFE0-4E18-A852-11801D0E8771}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Security", "src\CorePackages\Core.Security\Core.Security.csproj", "{C205272D-AFE0-4E18-A852-11801D0E8771}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\DevsProject\Application\Application.csproj", "{26518B84-1F91-47BA-BB68-0CB59DCD6C26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "src\DevsProject\Application\Application.csproj", "{26518B84-1F91-47BA-BB68-0CB59DCD6C26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "src\DevsProject\Domain\Domain.csproj", "{69AEC854-F4F2-4940-9771-521D68C50F0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "src\DevsProject\Domain\Domain.csproj", "{69AEC854-F4F2-4940-9771-521D68C50F0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "src\DevsProject\Infrastructure\Infrastructure.csproj", "{45C24393-2072-49C5-8059-72B06BEA6072}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "src\DevsProject\Infrastructure\Infrastructure.csproj", "{45C24393-2072-49C5-8059-72B06BEA6072}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistence", "src\DevsProject\Persistence\Persistence.csproj", "{F22D0E6D-DBA1-40A9-9049-115E8DBF949C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Persistence", "src\DevsProject\Persistence\Persistence.csproj", "{F22D0E6D-DBA1-40A9-9049-115E8DBF949C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "src\DevsProject\WebApi\WebApi.csproj", "{7FEDB0DE-F88F-480F-AB70-5608EB1A3531}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "src\DevsProject\WebApi\WebApi.csproj", "{7FEDB0DE-F88F-480F-AB70-5608EB1A3531}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
