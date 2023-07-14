@@ -1,5 +1,5 @@
 ﻿using Application.Features.Auths.Dtos;
-using Application.Features.Auths.Rules;
+//using Application.Features.Auths.Rules;
 using Application.Services.AuthService;
 using Application.Services.Repositories;
 using AutoMapper;
@@ -46,7 +46,14 @@ namespace Application.Features.Auths.Commands
                     throw new EmailCanNotBeDuplicated(); //Email Tekrar girilemez hatası
                 }
 
+
+               
+                
+                //HashingHelper.CreatePasswordHash(request.Password, out passwordHash, out passwordSalt);
+
                 AppUser newUser = _mapper.Map<AppUser>(request);
+                newUser.PasswordHash = PasswordToolKit.EnhancedHashPassword(request.Password);
+               
                 newUser.Id=Guid.NewGuid().ToString();
 
                 IdentityResult createdUser = await _userManager.CreateAsync(newUser,request.Password);

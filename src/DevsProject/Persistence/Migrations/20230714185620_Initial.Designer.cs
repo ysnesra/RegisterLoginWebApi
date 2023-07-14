@@ -12,7 +12,7 @@ using Persistence.Contexts;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(AppIdentityDbContext))]
-    [Migration("20230712200146_Initial")]
+    [Migration("20230714185620_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -141,8 +141,8 @@ namespace Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f08b6f92-4edf-4164-9b19-df6d9805063b",
-                            ConcurrencyStamp = "b5a1f19e-a2dc-41f7-a053-3e79de670b8d",
+                            Id = "0679a7f9-b918-4829-90c4-88133792e675",
+                            ConcurrencyStamp = "67ddd720-b41b-42b3-9622-aecad0cde9a2",
                             Name = "user"
                         });
                 });

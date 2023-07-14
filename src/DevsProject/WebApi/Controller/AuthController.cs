@@ -28,5 +28,36 @@ namespace WebApi.Controller
             return Created("", result);
         }
 
+        /// <summary>
+        /// Kullanıcı giriş işlemini yapar.
+        /// </summary>
+        /// <param name="userForLoginDto">Kullanıcı giriş bilgileri.</param>
+        /// <returns>Kullanıcı giriş işleminin sonucunu döndürür.</returns>
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
+        {
+            var loginCommand = new LoginCommand
+            {
+                UserForLoginDto = userForLoginDto,
+                IpAddress = GetIpAddress()
+            };
+
+            LoginedDto result = await Mediator.Send(loginCommand);
+            //SetRefreshTokenToCookie(result.RefreshToken);
+            return Created("", result.AccessToken);
+        }
+
+        /// <summary>
+        /// Çerez'e refresh token ekler.
+        /// </summary>
+        private void SetRefreshTokenToCookie(RefreshToken refreshToken)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = DateTime.Now.AddDays(7),
+            };
+            Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
+        }
     }
 }

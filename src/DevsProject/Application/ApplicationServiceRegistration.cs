@@ -22,7 +22,7 @@ namespace Application
             services.AddMediatR(Assembly.GetExecutingAssembly());
 
            
-            //services.AddScoped<AuthBusinessRules>();
+            services.AddScoped<AuthBusinessRules>();
 
             //Core.Application daki Pipelinesdaki Validationı çalıştıran clasımızıda(RequestValidationBehavior.cs) devreye sokarız
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
@@ -30,7 +30,7 @@ namespace Application
             //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
 
-            //services.AddScoped<IAuthService, AuthManager>();
+            services.AddScoped<IAuthService, AuthManager>();
             return services;
 
         }

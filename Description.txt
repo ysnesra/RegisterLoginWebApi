@@ -24,5 +24,11 @@ Core.CrossCuttingConcerns -> Exceptions klasöründe
 RegisterFailedException ve EmailCanNotBeDuplicated Exception classlarýyla hata ile ilgili açýklama mesaj yazýldý.
 AuthController'da Register operasyonu oluþturuldu.
 
+**************************
+Sisteme giriþ - Login olma:
+Application-> Auths-> LoginCommand oluþturuldu.
+Email ve Password bilgileri ile Login olundu.
+JwtToken üretildi
+
 
 

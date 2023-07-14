@@ -11,11 +11,7 @@ namespace Application.Services.AuthService
 {
     public interface IAuthService
     {
-        public Task<AccessToken> CreateAccessToken(AppUser appUser);
-        public Task<RefreshToken> CreateRefreshToken(AppUser appUser, string ipAddress);
-        public Task<RefreshToken> AddRefreshToken(RefreshToken refreshToken);
+        Task<AccessToken> LoginAsync(string usernameOrEmail, string password, int accessTokenLifeTime);
     }
 }
-//AccessToken : Token oluşturan metot
-//RefreshToken : Refresh Token oluşturan metot
-//AddRefreshToken : Refresh Token ı veritabanına ekleyen metot. Doğrulama karşılaştırma yapmak için
+

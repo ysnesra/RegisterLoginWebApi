@@ -1,4 +1,8 @@
 using Application;
+using Core.CrossCuttingConcerns.Exceptions;
+using Core.Security.JWT;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Persistence;
 
@@ -9,6 +13,24 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddIdentityServerConfig(builder.Configuration);
 builder.Services.AddApplicationServices();
+builder.Services.AddSecurityServices();
+
+//token optionslarý appsettings'den okumak için
+TokenOptions? tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<TokenOptions>();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,    //Oluþturulacak token deðerini kimin daðýttýný ifade edeceðimiz alandýr.
+        ValidateAudience = true,   //Oluþturulacak token deðerini kimlerin/hangi originlerin/sitelerin kullanýcý belirlediðimiz deðerdir.
+        ValidateLifetime = true,    //Oluþturulan token deðerinin süresini kontrol edecek olan doðrulamadýr.
+        ValidIssuer = tokenOptions.Issuer,
+        ValidAudience = tokenOptions.Audience,
+        ValidateIssuerSigningKey = true,   //Üretilecek token deðerinin uygulamamýza ait bir deðer olduðunu ifade eden suciry key verisinin doðrulanmasýdýr.       
+    };
+});
+
+
 
 //Swagger'a Authorize butonunu ekleme
 builder.Services.AddSwaggerGen(opt =>
@@ -47,6 +69,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+
+if (app.Environment.IsProduction())
+    app.ConfigureCustomExceptionMiddleware();
+
 
 app.UseAuthentication();
 app.UseAuthorization();

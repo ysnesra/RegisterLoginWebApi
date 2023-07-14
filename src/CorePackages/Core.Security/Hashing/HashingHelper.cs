@@ -14,7 +14,7 @@ public class HashingHelper
         }
     }
 
-    public static bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+    public static bool VerifyPasswordHash(string password, string passwordHash, byte[] passwordSalt)
     {
         using (HMACSHA512 hmac = new(passwordSalt))
         {

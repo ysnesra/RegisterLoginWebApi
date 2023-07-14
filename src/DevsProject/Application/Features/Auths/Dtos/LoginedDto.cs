@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Auths.Dtos
 {
-    public class RegisteredDto : RefreshedTokenDto
+    public class LoginedDto : RefreshedTokenDto
     {
-        //Registera özel fieldlar olursa diye ayrı olarak RegisteredDto oluşturuldu 
+
     }
 }

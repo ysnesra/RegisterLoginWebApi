@@ -1,6 +1,10 @@
 ﻿using Application.Services.Repositories;
 using Core.CrossCuttingConcerns.Exceptions;
+using Core.Infrastructure.Identity;
 using Core.Security.Entities;
+using Core.Security.Hashing;
+using MediatR;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,18 +15,33 @@ namespace Application.Features.Auths.Rules
 {
     public class AuthBusinessRules
     {
-        private readonly IUserRepository _userRepository;
-
-        public AuthBusinessRules(IUserRepository userRepository)
+        private readonly UserManager<AppUser> _userManager;
+        public AuthBusinessRules(UserManager<AppUser> userManager)
         {
-            _userRepository = userRepository;
+            _userManager = userManager;
         }
 
         //Aynı mail adresinde kayıt var mı kontrolü
         public async Task EmailCanNotBeDuplicatedWhenRegistered(string email)
         {
-            User? user = await _userRepository.GetAsync(u => u.Email == email);
-            if(user != null)  throw new BusinessException("Mail already exists");  
+            AppUser? user = await _userManager.FindByEmailAsync(email);
+            if (user != null) throw new BusinessException("Mail already exists");
+        }
+
+        //Kullanıcı Login olurken maili sistemde kayıtlı mı
+        public async Task UserShouldBeExistWhenLogin(string email)
+        {
+            AppUser? user = await _userManager.FindByEmailAsync(email);
+            if (user is null)
+                throw new BusinessException("There is no such user record.");
+        }
+
+        //Kullanıcının şifresi doğru mu
+        public void CheckIfPasswordIsCorrect(string requestPassword, string userPasswordHash, byte[] userPasswordSalt)
+        {
+            
+            if (!HashingHelper.VerifyPasswordHash(requestPassword, userPasswordHash, userPasswordSalt))
+                throw new BusinessException("Password isn't correct");
         }
     }
 }

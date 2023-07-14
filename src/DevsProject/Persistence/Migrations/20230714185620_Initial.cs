@@ -172,7 +172,7 @@ namespace Persistence.Migrations
             migrationBuilder.InsertData(
                 table: "IdentityRole",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "f08b6f92-4edf-4164-9b19-df6d9805063b", "b5a1f19e-a2dc-41f7-a053-3e79de670b8d", "user", null });
+                values: new object[] { "0679a7f9-b918-4829-90c4-88133792e675", "67ddd720-b41b-42b3-9622-aecad0cde9a2", "user", null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
