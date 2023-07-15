@@ -11,4 +11,11 @@ namespace Infrastructure.Services.Abstract
     {
         IOneTimePasswordService CreateSendOtpService(OneTimePasswordChannel channel);
     }
+
+
+
+    // 1 123456 Mail 
+    // 2 234567 Sms
+
+    //Queue : 1 -> Mail -> MailService, 2 -> Sms -> SmsService
 }

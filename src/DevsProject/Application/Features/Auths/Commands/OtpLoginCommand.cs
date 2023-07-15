@@ -5,6 +5,7 @@ using Core.Security.Dtos;
 using Core.Security.Enums;
 using Core.Security.Identity;
 using Core.Security.JWT;
+using Infrastructure.Services.Abstract;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -22,25 +23,24 @@ namespace Application.Features.Auths.Commands
         public string Email { get; set; }
 
         public string Password { get; set; }
+
+       
         public class OtpLoginCommandHandler : IRequestHandler<OtpLoginCommand, OneTimePasswordDto>
         {
             private readonly ITwoFactorAuthenticationRepository _twoFactorAuthenticationRepository;
             private readonly UserManager<AppUser> _userManager;
             private readonly SignInManager<AppUser> _signInManager; 
             private readonly AuthBusinessRules _authBusinessRules;
+            private readonly ISendOtpServiceFactory _sendOtpServiceFactory;
 
-
-
-            public OtpLoginCommandHandler(UserManager<AppUser> userManager, ITwoFactorAuthenticationRepository twoFactorAuthenticationRepository, AuthBusinessRules authBusinessRules, SignInManager<AppUser> signInManager)
+            public OtpLoginCommandHandler(ITwoFactorAuthenticationRepository twoFactorAuthenticationRepository, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, AuthBusinessRules authBusinessRules, ISendOtpServiceFactory sendOtpServiceFactory)
             {
-                _userManager = userManager;
                 _twoFactorAuthenticationRepository = twoFactorAuthenticationRepository;
-                _authBusinessRules = authBusinessRules;
+                _userManager = userManager;
                 _signInManager = signInManager;
+                _authBusinessRules = authBusinessRules;
+                _sendOtpServiceFactory = sendOtpServiceFactory;
             }
-
-
-
 
             public async Task<OneTimePasswordDto> Handle(OtpLoginCommand request, CancellationToken cancellationToken)
             {
@@ -56,6 +56,9 @@ namespace Application.Features.Auths.Commands
                 }
 
                 var otpResult = await _twoFactorAuthenticationRepository.CreateOtp(Guid.Parse(user.Id), user.Email, request.Channel);
+               
+
+
 
                 return otpResult;
             }

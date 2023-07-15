@@ -16,6 +16,7 @@ namespace Core.Security.EntityConfiguration
             builder.Property(_ => _.Channel).IsRequired();
             builder.Property(_ => _.To).IsRequired().HasMaxLength(128);
             builder.Property(_ => _.OneTimePassword).IsRequired();
+            builder.Property(_=>_.IsSend).IsRequired();
             builder.Property(_ => _.UserId).IsRequired();
 
             builder

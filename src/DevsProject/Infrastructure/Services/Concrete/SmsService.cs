@@ -23,28 +23,40 @@ namespace Infrastructure.Services.Concrete
         }
 
 
-        public async Task<SendOtpResponse> SendOtp(string message, string to, OneTimePasswordChannel channel)
+        public async Task<SendOtpResponse> SendOtp(string message, List<string> to, OneTimePasswordChannel channel)
         {
             var organikHaberlesme = _configuration.GetSection(nameof(OrganikHaberlesmeModel)).Get<OrganikHaberlesmeModel>();
+
+
+            var groups = new List<int>();
+
+            groups.Add(1);
+            groups.Add(2);
 
             var smsOtpRequest = new SmsSendOtp()
             {
                 Message = message,
+                Groups = groups,
                 Recipients = to,
-                Header = 100677,
+                Commercial = null,
                 Type = "sms",
-                Encode = "numeric",
-                Timeout = 60,
-                Length = 6
+                Otp = false,
+                Header = 100677,
+                Appeal = false,
+                Validity = 48,
+                Date = DateTime.UtcNow
             };
 
+          
             var client = new HttpClient();
 
             client.DefaultRequestHeaders.Add("X-Organik-Auth", organikHaberlesme.XOrganikAuth);
 
-            var content = new StringContent(JsonConvert.SerializeObject(smsOtpRequest), Encoding.UTF8, "application/json");
+            var data = JsonConvert.SerializeObject(smsOtpRequest).ToLower();
 
-            var url = $"{organikHaberlesme.BaseUrl}sms/otp/send";
+            var content = new StringContent(data, Encoding.UTF8, "application/json");
+
+            var url = $"{organikHaberlesme.BaseUrl}sms/send";
 
             var response = await client.PostAsync(url, content);
 
@@ -59,7 +71,6 @@ namespace Infrastructure.Services.Concrete
             };
 
             return requestResult;
-
 
              
         }

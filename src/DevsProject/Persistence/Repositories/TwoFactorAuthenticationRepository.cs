@@ -38,16 +38,15 @@ namespace Persistence.Repositories
                 UserId = userId,
                 Channel = channel,
                 To = to,
-                OneTimePassword = PasswordHashingHelper.EnhancedHashPassword(oneTimePassword),
-                IsUsed = false
+                OneTimePassword = oneTimePassword,
+                IsUsed = false,
+                IsSend = false,
             };
 
             Context.Add(twoFactorAuthentication);
             await Context.SaveChangesAsync();
 
             result.Success = true;
-            result.OneTimePassword = oneTimePassword;
-            result.OneTimePasswordId = twoFactorAuthentication.Id;
 
             return result;
         }
@@ -72,12 +71,12 @@ namespace Persistence.Repositories
                 return false;
             }
 
-            var otpVerify = PasswordHashingHelper.EnhancedVerify(oneTimePassword, otpTransaction.OneTimePassword);
-
-            if(!otpVerify)
+            if(otpTransaction.OneTimePassword != oneTimePassword)
             {
                 return false;
             }
+
+            
 
             otpTransaction.IsUsed = true;
 

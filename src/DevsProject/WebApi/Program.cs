@@ -1,6 +1,7 @@
 using Application;
 using Core.CrossCuttingConcerns.Exceptions;
 using Core.Security.JWT;
+using Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -14,6 +15,8 @@ builder.Services.AddControllers();
 builder.Services.AddIdentityServerConfig(builder.Configuration);
 builder.Services.AddApplicationServices();
 builder.Services.AddSecurityServices();
+builder.Services.AddInsfractureServices();
+builder.Services.QuartzService();
 
 //token optionslarý appsettings'den okumak için
 TokenOptions? tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<TokenOptions>();

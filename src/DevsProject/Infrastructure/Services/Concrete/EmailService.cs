@@ -1,4 +1,5 @@
 ﻿using Core.Security.Enums;
+using Infrastructure.Helpers;
 using Infrastructure.Models.Response;
 using Infrastructure.Services.Abstract;
 using Microsoft.Extensions.Configuration;
@@ -19,9 +20,16 @@ namespace Infrastructure.Services.Concrete
             _configuration = configuration;
         }
 
-        public Task<SendOtpResponse> SendOtp(string message, string to, OneTimePasswordChannel channel)
+        public async Task<SendOtpResponse> SendOtp(string message, List<string> to, OneTimePasswordChannel channel)
         {
-            throw new NotImplementedException();
+            //Müşteriye otomatik olarak görüşme bilgilendirme Maili gönderme
+            EmailToInformation emailHelper = new EmailToInformation(_configuration);
+            emailHelper.SendEmail(to, message);
+
+            var result = new SendOtpResponse();
+            result.Result = true;
+
+            return result;
         }
     }
 }

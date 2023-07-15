@@ -10,6 +10,6 @@ namespace Infrastructure.Services.Abstract
 {
     public interface IOneTimePasswordService
     {
-        public Task<SendOtpResponse> SendOtp(string message, string to, OneTimePasswordChannel channel);
+        public Task<SendOtpResponse> SendOtp(string message, List<string> to, OneTimePasswordChannel channel);
     }
 }

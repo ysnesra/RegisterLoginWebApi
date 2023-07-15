@@ -10,16 +10,22 @@ namespace Infrastructure.Models.SmsModels
     {
         public string Message { get; set; }
 
-        public string Recipients { get; set; }
+        public List<int> Groups { get; set; }
+
+        public List<string> Recipients { get; set; }
+
+        public string Commercial { get; set; }
 
         public int Header { get; set; }
 
         public string Type { get; set; }
 
-        public string Encode { get; set; }
+        public bool Appeal { get; set; }
 
-        public int Timeout { get; set; }
+        public bool Otp { get; set; }
 
-        public int Length { get; set; }
+        public int Validity { get; set; }
+
+        public DateTime Date { get; set; }
     }
 }

@@ -10,6 +10,6 @@ namespace Infrastructure.Models.Response
     {
         public bool Result { get; set; }
 
-        public string Data { get; set; }
+        public object Data { get; set; }
     }
 }
