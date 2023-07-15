@@ -19,7 +19,10 @@ namespace Application.Features.Auths.Profiles
         {
             CreateMap<AppUser, UserForRegisterDto>().ReverseMap();
             CreateMap<AppUser, RegisterCommand>().ReverseMap();
-          
+            CreateMap<AppUser, OneTimePasswordDto>().ReverseMap();
+            CreateMap<AppUser, LoginCommand>().ReverseMap();
+
+
         }
     }
 }

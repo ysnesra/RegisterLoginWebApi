@@ -11,6 +11,7 @@ using Core.Security.Identity;
 using Core.Security.JWT;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,9 @@ namespace Application.Features.Auths.Commands
     /// </summary>
     public class LoginCommand : IRequest<LoginedDto>
     {
-        public UserForLoginDto UserForLoginDto { get; set; }
+        public OneTimePasswordDto OneTimePasswordDto { get; set; }
+
+
 
         /// <summary>
         /// Kullanıcı giriş işlemini gerçekleştiren işleyici sınıfı
@@ -38,37 +41,56 @@ namespace Application.Features.Auths.Commands
             private readonly SignInManager<AppUser> _signInManager;
             private readonly ITokenHandler _tokenHandler;
             private readonly IAuthService _authService;
+            private readonly ITwoFactorAuthenticationRepository _twoFactorAuthenticationRepository;
 
-            public LoginCommandHandler(AuthBusinessRules authBusinessRules, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ITokenHandler tokenHandler, IAuthService authService)
+
+            public LoginCommandHandler(AuthBusinessRules authBusinessRules, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ITokenHandler tokenHandler, IAuthService authService, ITwoFactorAuthenticationRepository twoFactorAuthenticationRepository)
             {
                 _authBusinessRules = authBusinessRules;
                 _userManager = userManager;
                 _signInManager = signInManager;
                 _tokenHandler = tokenHandler;
-                _authService = authService;              
+                _authService = authService;
+                _twoFactorAuthenticationRepository = twoFactorAuthenticationRepository;
             }
 
             public async Task<LoginedDto> Handle(LoginCommand request, CancellationToken cancellationToken)
             {
-                await _authBusinessRules.UserShouldBeExistWhenLogin(request.UserForLoginDto.Email);
 
-                AppUser? user = await _userManager.FindByEmailAsync(request.UserForLoginDto.Email);
 
-                SignInResult result = await _signInManager.CheckPasswordSignInAsync(user, request.UserForLoginDto.Password, false);
 
-                if (result.Succeeded) //Authentication başarılı!
+                var oneTimePasswordInfo = await _twoFactorAuthenticationRepository.Query().FirstOrDefaultAsync(_ => _.Id == request.OneTimePasswordDto.OneTimePasswordId);
+
+                if(oneTimePasswordInfo is null)
+                    throw new Exception("Geçersiz OTP");
+
+                if (oneTimePasswordInfo.OneTimePassword != request.OneTimePasswordDto.OneTimePassword)
+                        throw new Exception("Geçersiz OTP");
+
+                if (oneTimePasswordInfo is null)
+                    throw new Exception("Geçersiz OTP");
+
+                AppUser? user = await _userManager.FindByIdAsync(oneTimePasswordInfo.UserId.ToString());
+
+
+
+                var verifyOtp = await _twoFactorAuthenticationRepository.VerifyOtp(Guid.Parse(user.Id), request.OneTimePasswordDto.OneTimePassword);
+
+                if (!verifyOtp)
+                    throw new Exception("Geçersiz OTP");
+
+
+                //Yetkiler belirlenir:
+                AccessToken createdAccessToken = _tokenHandler.CreateAccessToken(5, user);
+
+                return new LoginedDto()
                 {
-                    //Yetkiler belirlenir:
-                    AccessToken createdAccessToken = _tokenHandler.CreateAccessToken(5,user);
-             
-                    return new LoginedDto()
-                    {
-                        AccessToken = createdAccessToken,
-               
-                    };
-                }
+                    AccessToken = createdAccessToken,
+
+                };
+
                 throw new AuthenticationErrorException();
-    
+
             }
         }
     }

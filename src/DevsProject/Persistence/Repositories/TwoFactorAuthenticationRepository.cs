@@ -46,7 +46,7 @@ namespace Persistence.Repositories
             Context.Add(twoFactorAuthentication);
             await Context.SaveChangesAsync();
 
-            result.Success = true;
+            result.OneTimePasswordId = twoFactorAuthentication.Id;
 
             return result;
         }
@@ -79,6 +79,7 @@ namespace Persistence.Repositories
             
 
             otpTransaction.IsUsed = true;
+          
 
             Context.Update(otpTransaction);
             await Context.SaveChangesAsync();

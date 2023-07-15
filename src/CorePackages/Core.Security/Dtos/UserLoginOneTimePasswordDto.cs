@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 namespace Core.Security.Dtos
 {
-    public class OneTimePasswordDto
+    public class UserLoginOneTimePasswordDto
     {
-      
         public long OneTimePasswordId { get; set; }
+
         public string OneTimePassword { get; set; }
 
-     
-        
     }
 }
