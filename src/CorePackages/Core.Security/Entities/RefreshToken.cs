@@ -1,4 +1,5 @@
 ﻿using Core.Persistence.Repositories;
+using Core.Security.Identity;
 
 namespace Core.Security.Entities;
 
@@ -18,7 +19,7 @@ public class RefreshToken : Entity
     //public bool IsRevoked => Revoked != null;
     //public bool IsActive => !IsRevoked && !IsExpired;
 
-    public virtual User User { get; set; }
+    public virtual AppUser User { get; set; }
 
     public RefreshToken()
     {

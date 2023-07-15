@@ -4,10 +4,10 @@ using Application.Services.AuthService;
 using Application.Services.Repositories;
 using AutoMapper;
 using Core.CrossCuttingConcerns.Exceptions;
-using Core.Infrastructure.Identity;
 using Core.Security.Dtos;
 using Core.Security.Entities;
 using Core.Security.Hashing;
+using Core.Security.Identity;
 using Core.Security.JWT;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -26,7 +26,6 @@ namespace Application.Features.Auths.Commands
     public class LoginCommand : IRequest<LoginedDto>
     {
         public UserForLoginDto UserForLoginDto { get; set; }
-        public string IpAddress { get; set; }
 
         /// <summary>
         /// Kullanıcı giriş işlemini gerçekleştiren işleyici sınıfı
@@ -39,16 +38,14 @@ namespace Application.Features.Auths.Commands
             private readonly SignInManager<AppUser> _signInManager;
             private readonly ITokenHandler _tokenHandler;
             private readonly IAuthService _authService;
-            private readonly IMapper _mapper;
 
-            public LoginCommandHandler(AuthBusinessRules authBusinessRules, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ITokenHandler tokenHandler, IAuthService authService, IMapper mapper)
+            public LoginCommandHandler(AuthBusinessRules authBusinessRules, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ITokenHandler tokenHandler, IAuthService authService)
             {
                 _authBusinessRules = authBusinessRules;
                 _userManager = userManager;
                 _signInManager = signInManager;
                 _tokenHandler = tokenHandler;
-                _authService = authService;
-                _mapper = mapper;
+                _authService = authService;              
             }
 
             public async Task<LoginedDto> Handle(LoginCommand request, CancellationToken cancellationToken)

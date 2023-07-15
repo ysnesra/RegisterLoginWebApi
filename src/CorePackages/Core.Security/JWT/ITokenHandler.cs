@@ -1,4 +1,5 @@
-﻿using Core.Infrastructure.Identity;
+﻿
+using Core.Security.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;

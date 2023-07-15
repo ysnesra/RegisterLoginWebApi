@@ -1,6 +1,6 @@
 ﻿using Application.Services.Repositories;
 using Core.CrossCuttingConcerns.Exceptions;
-using Core.Infrastructure.Identity;
+using Core.Security.Identity;
 using Core.Persistence.Paging;
 using Core.Security.Entities;
 using Core.Security.JWT;

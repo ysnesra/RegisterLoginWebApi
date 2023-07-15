@@ -1,4 +1,4 @@
-﻿using Core.Infrastructure.Identity;
+﻿using Core.Security.Identity;
 using Core.Security.Entities;
 using Core.Security.JWT;
 using System;

@@ -1,11 +1,12 @@
 ﻿using Application.Services.Repositories;
-using Core.Infrastructure.Identity;
+using Core.Security.Identity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence.Contexts;
+using Persistence.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +39,9 @@ namespace Persistence
 
             }).AddEntityFrameworkStores<AppIdentityDbContext>()
               .AddDefaultTokenProviders();
-           
+
+            services.AddTransient<ITwoFactorAuthenticationRepository, TwoFactorAuthenticationRepository>();
+
             return services;
         }
 

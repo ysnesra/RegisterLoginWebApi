@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Infrastructure.Identity
+namespace Core.Security.Identity
 {
-    public class AppRole :IdentityRole<string>
+    public class AppRole : IdentityRole<string>
     {
     }
 }

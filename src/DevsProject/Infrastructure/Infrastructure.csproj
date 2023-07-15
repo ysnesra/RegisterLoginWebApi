@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\CorePackages\Core.Security\Core.Security.csproj" />
+  </ItemGroup>
+
 </Project>

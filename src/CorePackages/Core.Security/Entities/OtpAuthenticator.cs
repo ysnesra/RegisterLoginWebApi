@@ -1,4 +1,5 @@
 ﻿using Core.Persistence.Repositories;
+using Core.Security.Identity;
 
 namespace Core.Security.Entities;
 
@@ -8,7 +9,7 @@ public class OtpAuthenticator : Entity
     public byte[] SecretKey { get; set; }
     public bool IsVerified { get; set; }
 
-    public virtual User User { get; set; }
+    public virtual AppUser User { get; set; }
 
     public OtpAuthenticator()
     {

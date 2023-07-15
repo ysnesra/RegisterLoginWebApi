@@ -5,23 +5,24 @@ DDD(Domain Dream Development) Tekniði ile Onion Architecture mimarisi kullanýlmý
 IdentityServer yapýsý ve Hangfire kullanýlarak Authenticate iþlemi yapýlmýþtýr.
 
 **************************
-Core.Infrastructure -> Identity klasörüne-> AppRole ve AppUser entityleri oluþturuldu.
+Core.Security -> Identity klasörüne-> AppRole ve AppUser entityleri oluþturuldu.
     AppRole: IdentityRole Identity sýnýfýndan inherit edildi
     AppUser: IdentityUser Identity sýnýfýndan inherit edildi
 
 DevsProject -> Persistence -> Contexts içine -> AppIdentityDbContext tanýmlandý.
 
-PersistenceServiceRegistration.cs extension clasýna -> AddIdentityServerConfig servisi oluþturularak configuration yapýldý,
+PersistenceServiceRegistration.cs extension clasýna -> AddIdentityServerConfig servisi oluþturularak configuration yapýldý,database baðlantýs verildi.
 Bu servis program.cs'ye de tanýmlandý.
 
 **************************
 Kullanýcý Register olma:
 Application-> Auths-> RegisterCommand oluþturuldu.
 IdentityServer ýn UserManager servisi kullanýlarak kullanýcý iþlemleri yapýldý.
+!Kullanýcý Üye olurken Token oluþturmaya gerek yok 
 
-Excetion hatalarýný özelleþtirildi:
+Exception hatalarýný özelleþtirildi:
 Core.CrossCuttingConcerns -> Exceptions klasöründe 
-RegisterFailedException ve EmailCanNotBeDuplicated Exception classlarýyla hata ile ilgili açýklama mesaj yazýldý.
+RegisterFailedException, EmailCanNotBeDuplicated... Exception classlarýyla hata ile ilgili açýklama mesaj yazýldý.
 AuthController'da Register operasyonu oluþturuldu.
 
 **************************
@@ -29,6 +30,21 @@ Sisteme giriþ - Login olma:
 Application-> Auths-> LoginCommand oluþturuldu.
 Email ve Password bilgileri ile Login olundu.
 JwtToken üretildi
+
+**************************
+OTP(Doðrulama Kodu) ile Login olma:
+
+Core.Security->Entities -> için "OtpAuthenticator" entitysi ve "TwoFactorAuthenticationTransaction" entitysi oluþturuldu.
+Ýkiaþamalý doðrulama yapýlacaðýndan; AppUser(1)-TwoFactorAuthenticationTransaction(N) iliþksi oluþturuldu.
+Migration yapýldý
+Bu entitylerin veritabaný iþlemleri için 
+->Application içinde Services->Repositories->ITwoFactorAuthenticationRepository interfacei oluþturuldu
+->Persistence içinde Repositories içine->TwoFactorAuthenticationRepository oluþturuldu.
+
+Core.Security->Dtos -> "OneTimePasswordDto" oluþturuldu. "OtpLoginCommand" de bu OneTimePasswordDtosu dönülür
+OtpLoginCommand'de;
+   TwoFactorAuthenticationRepository injecte edilerek CreateOpt fonksitonu ile Opt(OneTimePassword) üretildi.
+
 
 
 

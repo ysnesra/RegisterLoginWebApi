@@ -1,7 +1,7 @@
 ﻿using Application.Features.Auths.Commands;
 using Application.Features.Auths.Dtos;
 using AutoMapper;
-using Core.Infrastructure.Identity;
+using Core.Security.Identity;
 using Core.Persistence.Paging;
 using Core.Security.Dtos;
 using Core.Security.Entities;
@@ -19,6 +19,7 @@ namespace Application.Features.Auths.Profiles
         {
             CreateMap<AppUser, UserForRegisterDto>().ReverseMap();
             CreateMap<AppUser, RegisterCommand>().ReverseMap();
+          
         }
     }
 }

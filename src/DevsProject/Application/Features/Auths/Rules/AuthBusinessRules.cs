@@ -1,6 +1,6 @@
 ﻿using Application.Services.Repositories;
 using Core.CrossCuttingConcerns.Exceptions;
-using Core.Infrastructure.Identity;
+using Core.Security.Identity;
 using Core.Security.Entities;
 using Core.Security.Hashing;
 using MediatR;
@@ -36,12 +36,6 @@ namespace Application.Features.Auths.Rules
                 throw new BusinessException("There is no such user record.");
         }
 
-        //Kullanıcının şifresi doğru mu
-        public void CheckIfPasswordIsCorrect(string requestPassword, string userPasswordHash, byte[] userPasswordSalt)
-        {
-            
-            if (!HashingHelper.VerifyPasswordHash(requestPassword, userPasswordHash, userPasswordSalt))
-                throw new BusinessException("Password isn't correct");
-        }
+      
     }
 }

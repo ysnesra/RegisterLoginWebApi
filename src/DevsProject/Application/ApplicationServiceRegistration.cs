@@ -1,5 +1,6 @@
 ﻿using Application.Features.Auths.Rules;
 using Application.Services.AuthService;
+using Application.Services.Repositories;
 using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Validation;
 using MediatR;
@@ -29,6 +30,8 @@ namespace Application
 
             //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+
+    
 
             services.AddScoped<IAuthService, AuthManager>();
             return services;

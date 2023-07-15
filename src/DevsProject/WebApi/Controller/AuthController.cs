@@ -1,12 +1,13 @@
 ﻿using Application.Features.Auths.Commands;
 using Application.Features.Auths.Dtos;
-using Core.Infrastructure.Identity;
+using Core.Security.Identity;
 using Core.Security.Dtos;
 using Core.Security.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Core.Security.Enums;
 
 namespace WebApi.Controller
 {
@@ -38,8 +39,7 @@ namespace WebApi.Controller
         {
             var loginCommand = new LoginCommand
             {
-                UserForLoginDto = userForLoginDto,
-                IpAddress = GetIpAddress()
+                UserForLoginDto = userForLoginDto,               
             };
 
             LoginedDto result = await Mediator.Send(loginCommand);
@@ -59,5 +59,15 @@ namespace WebApi.Controller
             };
             Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
         }
+
+        [HttpPost("OtpLogin")]
+        public async Task<IActionResult> OtpLogin([FromBody] OtpLoginCommand otpLoginCommand)
+        {
+           
+            OneTimePasswordDto result = await Mediator.Send(otpLoginCommand);
+            //SetRefreshTokenToCookie(result.RefreshToken);
+            return Created("", result);
+        }
+
     }
 }
