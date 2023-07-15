@@ -6,46 +6,20 @@ CQRS tasarımı ile MediatR kütüphanesini kullandığım WebAPI projesidir.
 DDD(Domain Dream Development) Tekniği ile Onion Architecture mimarisi kullanılmıştır.
 IdentityServer yapısı ve Hangfire kullanılarak Authenticate işlemi yapılmıştır.
 
-**************************
-Core.Security -> Identity klasörüne-> AppRole ve AppUser entityleri oluşturuldu.
-    AppRole: IdentityRole Identity sınıfından inherit edildi
-    AppUser: IdentityUser Identity sınıfından inherit edildi
+Enum tanımlanıp Mail için 1 ,Sms için 2 değerleri verildi.
 
-DevsProject -> Persistence -> Contexts içine -> AppIdentityDbContext tanımlandı.
+IdentityServer yapısı kullanıldı.
+Register olurken aynı mail adresinin tekrarlanmaması kontrolü IdentityServer ın userManager Servisi kullanılarak yapıldı
 
-PersistenceServiceRegistration.cs extension clasına -> AddIdentityServerConfig servisi oluşturularak configuration yapıldı,database bağlantıs verildi.
-Bu servis program.cs'ye de tanımlandı.
+OtpLogin ile OTP üretip ;
+buradaki OTP Id si ve doğrulama kodu ile Login işlemi gerçekleştirildi ve Jwt Token üretildi.
 
-**************************
-Kullanıcı Register olma:
-Application-> Auths-> RegisterCommand oluşturuldu.
-IdentityServer ın UserManager servisi kullanılarak kullanıcı işlemleri yapıldı.
-!Kullanıcı Üye olurken Token oluşturmaya gerek yok 
+OTP üretme işleminde Hangfire yapısı kullanıldı.
+Hangfire için Quartz kütüphanesi indirildi. QuartzService yazıldı. 5 sn de bir işlem yapmamızı sağlar ve 
+TwoFactorAuthenticationTransactions tablosundaki IsSend değerini True ya çeker.
 
-Exception hatalarını özelleştirildi:
-Core.CrossCuttingConcerns -> Exceptions klasöründe 
-RegisterFailedException, EmailCanNotBeDuplicated... Exception classlarıyla hata ile ilgili açıklama mesaj yazıldı.
-AuthController'da Register operasyonu oluşturuldu.
 
-**************************
-Sisteme giriş - Login olma:
-Application-> Auths-> LoginCommand oluşturuldu.
-Email ve Password bilgileri ile Login olundu.
-JwtToken üretildi
-
-**************************
-OTP(Doğrulama Kodu) ile Login olma:
-
-Core.Security->Entities -> için "OtpAuthenticator" entitysi ve "TwoFactorAuthenticationTransaction" entitysi oluşturuldu.
-İkiaşamalı doğrulama yapılacağından; AppUser(1)-TwoFactorAuthenticationTransaction(N) ilişksi oluşturuldu.
-Migration yapıldı
-Bu entitylerin veritabanı işlemleri için 
-->Application içinde Services->Repositories->ITwoFactorAuthenticationRepository interfacei oluşturuldu
-->Persistence içinde Repositories içine->TwoFactorAuthenticationRepository oluşturuldu.
-
-Core.Security->Dtos -> "OneTimePasswordDto" oluşturuldu. "OtpLoginCommand" de bu OneTimePasswordDtosu dönülür
-OtpLoginCommand'de;
-   TwoFactorAuthenticationRepository injecte edilerek CreateOpt fonksitonu ile Opt(OneTimePassword) üretildi.
+![otpdogrulama](https://github.com/ysnesra/RegisterLoginWebApi/assets/104023688/7aa9e7e9-ede6-45ba-910f-173369fbe5ea)
 
 
 
