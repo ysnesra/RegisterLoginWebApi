@@ -37,7 +37,7 @@ IdentityServer yapısı ve Hangfire kullanılarak Authenticate işlemi yapılmı
 |![3loginrequest](https://github.com/ysnesra/RegisterLoginWebApi/assets/104023688/a3f37d3e-0bc2-4e93-89a6-672750fe5b36)
  |![4logincommanduservalue](https://github.com/ysnesra/RegisterLoginWebApi/assets/104023688/3b3f5b31-1881-4d1b-bdf4-fc02143d4cdb)
 |
-|-![5loginResponse](https://github.com/ysnesra/RegisterLoginWebApi/assets/104023688/43dea836-3275-4eba-9cae-e2fe927927ef)
--|--|
+|--|--|
 |  |  | 
+![5loginResponse](https://github.com/ysnesra/RegisterLoginWebApi/assets/104023688/43dea836-3275-4eba-9cae-e2fe927927ef)
 
