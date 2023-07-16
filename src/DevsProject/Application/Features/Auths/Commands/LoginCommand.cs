@@ -28,21 +28,17 @@ namespace Application.Features.Auths.Commands
     {
         public OneTimePasswordDto OneTimePasswordDto { get; set; }
 
-
-
         /// <summary>
         /// Kullanıcı giriş işlemini gerçekleştiren işleyici sınıfı
         /// </summary>
         public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginedDto>
         {
-
             private readonly AuthBusinessRules _authBusinessRules;
             private readonly UserManager<AppUser> _userManager;
             private readonly SignInManager<AppUser> _signInManager;
             private readonly ITokenHandler _tokenHandler;
             private readonly IAuthService _authService;
             private readonly ITwoFactorAuthenticationRepository _twoFactorAuthenticationRepository;
-
 
             public LoginCommandHandler(AuthBusinessRules authBusinessRules, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ITokenHandler tokenHandler, IAuthService authService, ITwoFactorAuthenticationRepository twoFactorAuthenticationRepository)
             {
@@ -56,9 +52,6 @@ namespace Application.Features.Auths.Commands
 
             public async Task<LoginedDto> Handle(LoginCommand request, CancellationToken cancellationToken)
             {
-
-
-
                 var oneTimePasswordInfo = await _twoFactorAuthenticationRepository.Query().FirstOrDefaultAsync(_ => _.Id == request.OneTimePasswordDto.OneTimePasswordId);
 
                 if(oneTimePasswordInfo is null)
@@ -67,18 +60,12 @@ namespace Application.Features.Auths.Commands
                 if (oneTimePasswordInfo.OneTimePassword != request.OneTimePasswordDto.OneTimePassword)
                         throw new Exception("Geçersiz OTP");
 
-                if (oneTimePasswordInfo is null)
-                    throw new Exception("Geçersiz OTP");
-
                 AppUser? user = await _userManager.FindByIdAsync(oneTimePasswordInfo.UserId.ToString());
-
-
 
                 var verifyOtp = await _twoFactorAuthenticationRepository.VerifyOtp(Guid.Parse(user.Id), request.OneTimePasswordDto.OneTimePassword);
 
                 if (!verifyOtp)
                     throw new Exception("Geçersiz OTP");
-
 
                 //Yetkiler belirlenir:
                 AccessToken createdAccessToken = _tokenHandler.CreateAccessToken(5, user);
@@ -86,7 +73,6 @@ namespace Application.Features.Auths.Commands
                 return new LoginedDto()
                 {
                     AccessToken = createdAccessToken,
-
                 };
 
                 throw new AuthenticationErrorException();

@@ -31,10 +31,8 @@ namespace WebApi.Controller
 
         [HttpPost("OtpLogin")]
         public async Task<IActionResult> OtpLogin([FromBody] OtpLoginCommand otpLoginCommand)
-        {
-           
-            OneTimePasswordDto result = await Mediator.Send(otpLoginCommand);
-            //SetRefreshTokenToCookie(result.RefreshToken);
+        {           
+            OneTimePasswordDto result = await Mediator.Send(otpLoginCommand);            
             return Created("", result);
         }
 

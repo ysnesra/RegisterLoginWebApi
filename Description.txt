@@ -15,7 +15,8 @@ PersistenceServiceRegistration.cs extension clasýna -> AddIdentityServerConfig s
 Bu servis program.cs'ye de tanýmlandý.
 
 **************************
-Kullanýcý Register olma:
+###  Kullanýcý Register olma:  ### 
+
 Application-> Auths-> RegisterCommand oluþturuldu.
 IdentityServer ýn UserManager servisi kullanýlarak kullanýcý iþlemleri yapýldý.
 !Kullanýcý Üye olurken Token oluþturmaya gerek yok 
@@ -25,17 +26,12 @@ Core.CrossCuttingConcerns -> Exceptions klasöründe
 RegisterFailedException, EmailCanNotBeDuplicated... Exception classlarýyla hata ile ilgili açýklama mesaj yazýldý.
 AuthController'da Register operasyonu oluþturuldu.
 
-**************************
-Sisteme giriþ - Login olma:
-Application-> Auths-> LoginCommand oluþturuldu.
-Email ve Password bilgileri ile Login olundu.
-JwtToken üretildi
 
 **************************
-OTP(Doðrulama Kodu) ile Login olma:
+###  OTP(Doðrulama Kodu) ile Login olma: //OTP üretildi  ### 
 
 Core.Security->Entities -> için "OtpAuthenticator" entitysi ve "TwoFactorAuthenticationTransaction" entitysi oluþturuldu.
-Ýkiaþamalý doðrulama yapýlacaðýndan; AppUser(1)-TwoFactorAuthenticationTransaction(N) iliþksi oluþturuldu.
+Ýkiaþamalý doðrulama yapýlacaðýndan; AppUser(1)-TwoFactorAuthenticationTransaction(N) iliþki oluþturuldu.
 Migration yapýldý
 Bu entitylerin veritabaný iþlemleri için 
 ->Application içinde Services->Repositories->ITwoFactorAuthenticationRepository interfacei oluþturuldu
@@ -43,7 +39,30 @@ Bu entitylerin veritabaný iþlemleri için
 
 Core.Security->Dtos -> "OneTimePasswordDto" oluþturuldu. "OtpLoginCommand" de bu OneTimePasswordDtosu dönülür
 OtpLoginCommand'de;
-   TwoFactorAuthenticationRepository injecte edilerek CreateOpt fonksitonu ile Opt(OneTimePassword) üretildi.
+   OTP üretilen command
+   TwoFactorAuthenticationRepository injecte edilerek
+          -> CreateOpt fonksiyonu ile Otp(OneTimePassword) üretildi.
+          -> VerifyOtp fonksiyonu ile Otp Onaylandý mý kontrolü yapýldý. Bu fonk. Login olurken kullanýlýr.
+
+
+OnetimePasswordü random üretmek için; RandomGenerator(Persistence->Utilities->Toolkit içinde) static classý oluþturuldu
+
+**************************
+###  Login olma:  ### 
+
+Sisteme giriþ - Login olma:
+Application-> Auths-> LoginCommand oluþturuldu. 
+   OneTimePasswordDto tipinde dönecek.
+   OneTimePasswordId ve OneTimePassword bilgileri ile Login olundu.//20,523470 gibi
+   JwtToken üretildi
+
+**************************
+###  Otomatik Mail Gönderme için:  ### 
+Infrastructure ->Helpers-> EmailToInformation classýnda 
+    Gönderilecek mailin kalýbý oluþturuldu
+    EmailSetting() private metotu oluþturulup -> SendEmail metotunun içinde çaðrýldý
+    EmailSetting() metotunda appsettingden aldýðým deðerleri EmailVerifyModel e aktardým
+
 
 
 

@@ -24,7 +24,7 @@ namespace Core.Security.Entities
 
         public string To { get; set; } //OTP'nin gittiği adres.
 
-        public string OneTimePassword { get; set; } //Hash
+        public string OneTimePassword { get; set; } //OTP doğrulama kodu
 
         public bool IsSend { get; set; } //OTP gönderildi mi?  
 

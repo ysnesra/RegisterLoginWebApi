@@ -13,8 +13,6 @@ namespace Infrastructure.Helpers
     //Gönderilecek bilgilendirme mailinin şablonu oluşturulur
     public class EmailToInformation
     {
-
-       
         //appsettingE taşıdım
         //private string smtpServer = "smtp.office365.com"; //gönderim yapacak hizmetin smtp adresi
         //private int smtpPort = 587;
@@ -28,18 +26,17 @@ namespace Infrastructure.Helpers
         {
             _configuration = configuration;
         }
-
-        EmailVerifyModel EmailSetting()
+        private EmailVerifyModel EmailSetting()
         {
             var emailSetting = _configuration.GetSection(nameof(EmailVerifyModel)).Get<EmailVerifyModel>();
 
             var result = new EmailVerifyModel()
             {
-                SenderEmail = emailSetting.SenderEmail,
-                SmtpPort = emailSetting.SmtpPort,
-                Password = emailSetting.Password,
                 SmtpServer = emailSetting.SmtpServer,
-                Username = emailSetting.Username
+                SmtpPort = emailSetting.SmtpPort,
+                Username = emailSetting.Username,                      
+                Password = emailSetting.Password,
+                SenderEmail = emailSetting.SenderEmail
             };
 
             return result;
@@ -63,7 +60,7 @@ namespace Infrastructure.Helpers
                @$"<html>
                 <body>
                 
-                    Merhaba {target}  <br
+                    Merhaba Gİriş için Doğrulama kodunu giriniz. {target}  <br
                     <h2>Doğrulama Kodu : {message}</h2>
                         <hr/>              
                 </body>

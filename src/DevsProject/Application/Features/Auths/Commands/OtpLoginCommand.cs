@@ -18,6 +18,7 @@ namespace Application.Features.Auths.Commands
 {
     public class OtpLoginCommand : IRequest<OneTimePasswordDto>
     {
+        //Otp üretilen Command
         public OneTimePasswordChannel Channel { get; set; }
        
         public string Email { get; set; }
@@ -30,16 +31,14 @@ namespace Application.Features.Auths.Commands
             private readonly ITwoFactorAuthenticationRepository _twoFactorAuthenticationRepository;
             private readonly UserManager<AppUser> _userManager;
             private readonly SignInManager<AppUser> _signInManager; 
-            private readonly AuthBusinessRules _authBusinessRules;
-            private readonly ISendOtpServiceFactory _sendOtpServiceFactory;
+            private readonly AuthBusinessRules _authBusinessRules;          
 
-            public OtpLoginCommandHandler(ITwoFactorAuthenticationRepository twoFactorAuthenticationRepository, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, AuthBusinessRules authBusinessRules, ISendOtpServiceFactory sendOtpServiceFactory)
+            public OtpLoginCommandHandler(ITwoFactorAuthenticationRepository twoFactorAuthenticationRepository, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, AuthBusinessRules authBusinessRules)
             {
                 _twoFactorAuthenticationRepository = twoFactorAuthenticationRepository;
                 _userManager = userManager;
                 _signInManager = signInManager;
-                _authBusinessRules = authBusinessRules;
-                _sendOtpServiceFactory = sendOtpServiceFactory;
+                _authBusinessRules = authBusinessRules;               
             }
 
             public async Task<OneTimePasswordDto> Handle(OtpLoginCommand request, CancellationToken cancellationToken)
@@ -56,9 +55,6 @@ namespace Application.Features.Auths.Commands
                 }
 
                 var otpResult = await _twoFactorAuthenticationRepository.CreateOtp(Guid.Parse(user.Id), user.Email, request.Channel);
-               
-
-
 
                 return otpResult;
             }

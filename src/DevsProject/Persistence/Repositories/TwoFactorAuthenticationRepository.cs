@@ -18,12 +18,9 @@ using System.Threading.Tasks;
 namespace Persistence.Repositories
 {
     public class TwoFactorAuthenticationRepository : EfRepositoryBase<TwoFactorAuthenticationTransaction, AppIdentityDbContext>, ITwoFactorAuthenticationRepository
-    {
-
-     
+    {  
         public TwoFactorAuthenticationRepository(AppIdentityDbContext context) : base(context)
         {
-
         }
 
         //Opt(OneTimePAssword üretme)
@@ -33,6 +30,7 @@ namespace Persistence.Repositories
 
             var oneTimePassword = RandomGenerator.RandomOneTimePassword();
 
+            //OneTimePasswordDto tipinde gelen veriler TwoFactorAuthenticationTransaction tipine çevrilir:
             var twoFactorAuthentication = new TwoFactorAuthenticationTransaction()
             {
                 UserId = userId,
@@ -51,36 +49,37 @@ namespace Persistence.Repositories
             return result;
         }
 
-        //Otp Onaylama
+        //Otp Onaylama //Login olurken kullanılcak
         public async Task<bool> VerifyOtp(Guid userId, string oneTimePassword)
         {
-            var oneTimePasswordTransaction =  Query()
+            var dbTwoFactorAuthenticationTransactions =  Query()
                 .Where(_ => _.UserId == userId)
                 .OrderByDescending(_=>_.Id)
                 .AsQueryable();
 
-            var otpTransaction =  await oneTimePasswordTransaction.FirstOrDefaultAsync();
+            var otpTransaction =  await dbTwoFactorAuthenticationTransactions.FirstOrDefaultAsync();
 
-            if(otpTransaction is null)
+            //kullanıcının sondoğrulama kodu varmı
+            if (otpTransaction is null)  
             {
                 return false;
             }
 
-            if(otpTransaction.IsUsed)
-            {
+            //kullanıcı var mı
+            if (otpTransaction.IsUsed)   
+            { 
                 return false;
             }
 
-            if(otpTransaction.OneTimePassword != oneTimePassword)
+            //Kullanıcının girdiği Onaykodu ile twoFactorAuthentication tablosundaki OnayKodu aynı mı
+            if (otpTransaction.OneTimePassword != oneTimePassword)  
             {
                 return false;
             }
 
             
-
-            otpTransaction.IsUsed = true;
+            otpTransaction.IsUsed = true;   //Otp kulalnıldığından true ya çekildi
           
-
             Context.Update(otpTransaction);
             await Context.SaveChangesAsync();
 
