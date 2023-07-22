@@ -11,6 +11,7 @@ namespace Application
 {
     public static class Quartz
     {
+        //SendOtpJob ı tetikliyoruz
         public static IServiceCollection QuartzService(this IServiceCollection services)
         {
             return services
@@ -19,12 +20,12 @@ namespace Application
                     q.UseMicrosoftDependencyInjectionJobFactory();
 
                     var sendOtpJob = new JobKey("sendOtp");
-                    q.AddJob<SendOtpJob>(opts => opts.WithIdentity(sendOtpJob));
+                    q.AddJob<SendOtpJob>(opts => opts.WithIdentity(sendOtpJob));   //SendOtpJob tipinde iş tanımlanır ve sendOtpJob anahtarı ile ilşkilendirilir.
 
-                    q.AddTrigger(opts => opts
+                    q.AddTrigger(opts => opts    //tetikleyici (trigger) tanımlanır
                        .ForJob(sendOtpJob)
                        .WithIdentity("createUser-trigger")
-                       .WithCronSchedule("0/5 * * * * ?"));
+                       .WithCronSchedule("0/5 * * * * ?"));  //5 sn'de 1 çalışır
 
                 }).AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
         }

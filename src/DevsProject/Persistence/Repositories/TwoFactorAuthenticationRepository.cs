@@ -30,7 +30,7 @@ namespace Persistence.Repositories
 
             var oneTimePassword = RandomGenerator.RandomOneTimePassword();
 
-            //OneTimePasswordDto tipinde gelen veriler TwoFactorAuthenticationTransaction tipine çevrilir:
+            //TwoFactorEntityisine değer atıyoruz
             var twoFactorAuthentication = new TwoFactorAuthenticationTransaction()
             {
                 UserId = userId,

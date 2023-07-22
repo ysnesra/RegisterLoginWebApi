@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace Application.TaskScheduler.Jobs
 {
 
-    [DisallowConcurrentExecution]
+    [DisallowConcurrentExecution]   //Job görevini tamamlamazsa bekletiyor
     public class SendOtpJob : IJob
     {
         private readonly ISendOtpServiceFactory _serviceFactory;
@@ -29,14 +29,15 @@ namespace Application.TaskScheduler.Jobs
             _userManager = userManager;
         }
 
-        public async Task Execute(IJobExecutionContext context)
+        public async Task Execute(IJobExecutionContext context)   
         {
+            // 1 132141(userId) Mail 123456(OTP) false(Issend) 
+
             var otpTransactions = await _twoFactorAuthenticationRepository.Query()
                 .Where(_ => _.IsSend == false)
-               
                 .ToListAsync();
 
-            var targets = new List<string>();
+            var targets = new List<string>(); // Entegrasyondan liste şeklinde istendiği için liste olarak string yazıldı.
 
 
             foreach(var otp in otpTransactions)
@@ -45,16 +46,18 @@ namespace Application.TaskScheduler.Jobs
 
                 var user = await _userManager.FindByIdAsync(otp.UserId.ToString());
 
-               switch(otp.Channel)
-                {
-                    case Core.Security.Enums.OneTimePasswordChannel.Email:
-                        targets.Add(user.Email);
-                        break;
-                    case Core.Security.Enums.OneTimePasswordChannel.Sms:
-                        targets.Add($"9{user.PhoneNumber}");
-                        break;
-                    default: throw new Exception("Tanımsız channel");
-                }
+               targets.Add(otp.To);
+
+               //switch(otp.Channel)
+               // {
+               //     case Core.Security.Enums.OneTimePasswordChannel.Email:
+               //         targets.Add(user.Email);
+               //         break;
+               //     case Core.Security.Enums.OneTimePasswordChannel.Sms:
+               //         targets.Add($"9{user.PhoneNumber}");
+               //         break;
+               //     default: throw new Exception("Tanımsız channel");
+               // }
 
                 var sendOtp = factory.SendOtp(otp.OneTimePassword, targets, otp.Channel);
 

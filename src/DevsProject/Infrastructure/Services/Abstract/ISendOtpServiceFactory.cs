@@ -13,7 +13,7 @@ namespace Infrastructure.Services.Abstract
     }
 
 
-
+    //Postacı
     // 1 123456 Mail 
     // 2 234567 Sms
 

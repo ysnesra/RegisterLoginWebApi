@@ -13,12 +13,14 @@ namespace Infrastructure.Helpers
     //Gönderilecek bilgilendirme mailinin şablonu oluşturulur
     public class EmailToInformation
     {
-        //appsettingE taşıdım
+        //appsettingE taşındı.Oradan EmailVerifyModel ile taşındı.
         //private string smtpServer = "smtp.office365.com"; //gönderim yapacak hizmetin smtp adresi
         //private int smtpPort = 587;
         //private string username = "yasnesra@outlook.com";
         //private string password = "Esra1030515786";
         //private string senderEmail = "yasnesra@outlook.com";
+
+        //appsettingsdeki değerlere IConfiguration yapılandırmasıyla erişilir
 
         IConfiguration _configuration;
 
@@ -28,6 +30,8 @@ namespace Infrastructure.Helpers
         }
         private EmailVerifyModel EmailSetting()
         {
+            //GetSection(nameof(EmailVerifyModel)) ; appsettinsdeki modele erişir.
+            //Get<EmailVerifyModel>() ; EmailVerifyModel sınıfını, appsettingsdeki EmailVerifyModel bölümündeki verileri eşleştirir
             var emailSetting = _configuration.GetSection(nameof(EmailVerifyModel)).Get<EmailVerifyModel>();
 
             var result = new EmailVerifyModel()

@@ -57,8 +57,6 @@ namespace Application.Features.Auths.Commands
                 if(oneTimePasswordInfo is null)
                     throw new Exception("Geçersiz OTP");
 
-                if (oneTimePasswordInfo.OneTimePassword != request.OneTimePasswordDto.OneTimePassword)
-                        throw new Exception("Geçersiz OTP");
 
                 AppUser? user = await _userManager.FindByIdAsync(oneTimePasswordInfo.UserId.ToString());
 

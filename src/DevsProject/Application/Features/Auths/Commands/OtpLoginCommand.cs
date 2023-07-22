@@ -54,7 +54,9 @@ namespace Application.Features.Auths.Commands
                     throw new Exception("Kullanıcı adı veya şifre hatalı.");
                 }
 
-                var otpResult = await _twoFactorAuthenticationRepository.CreateOtp(Guid.Parse(user.Id), user.Email, request.Channel);
+                var to = request.Channel == OneTimePasswordChannel.Email ? user.Email : $"9{user.PhoneNumber}";
+
+                var otpResult = await _twoFactorAuthenticationRepository.CreateOtp(Guid.Parse(user.Id), to, request.Channel);
 
                 return otpResult;
             }

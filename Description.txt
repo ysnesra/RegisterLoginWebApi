@@ -58,12 +58,70 @@ Application-> Auths-> LoginCommand oluþturuldu.
 
 **************************
 ###  Otomatik Mail Gönderme için:  ### 
+
 Infrastructure ->Helpers-> EmailToInformation classýnda 
     Gönderilecek mailin kalýbý oluþturuldu
-    EmailSetting() private metotu oluþturulup -> SendEmail metotunun içinde çaðrýldý
+    EmailSetting() private metotu oluþturulup -> SendEmail() metotunun içinde çaðrýldý
     EmailSetting() metotunda appsettingden aldýðým deðerleri EmailVerifyModel e aktardým
 
 
+**************************
+###  Hangfire(Job):  ### 
+
+Application katmanýna
+    Quartz, Quartz.DependencyInjection, Quartz.Hosting kütüphaneleri yüklendi.
+    "QuartzService" oluþturuldu.Arkaplanda zamnlanmýþ iþleri yapar.
+    QuartzService ile SendOtpJob clasý tetiklenir
+
+    TaskScheduler klasörü-> Job-> SendOtpJob.cs classý oluþturuldu.
+    SendOtpJob classý IJob'dan implemente ediliyor.Execute metotu içinde 
+      -> CreateSendOtpservice metotuyla hangi Channeli seçerse yönlendirme yapýyor 
+      -> factory servisinde SendOtp metotuyla Otp gönderilir.
+      -> IsSend True ya çekilir. Veritabaný Update edilir  //IsSend:OTP gönderildi mi bilgisini tutar
+
+Infrastructure katmanýna model ve Serviceler oluþturuldu:
+    Models klasörü:
+        OtpSend.cs -> (CommanModels klasöründe)-> Genel Otp gönderme
+        EmailSendOtp.cs -> (EmailModels klasöründe)-> Genel Otp gönderme
+        SmsSendOtp.cs -> (SmsModels klasöründe)-> Genel Otp gönderme
+        SendOtpResponse.cs -> (Response klasöründe)-> Genel Otp gönderme
+    
+    Helpers klasörü:
+         EmailToInformation clasýnda gönderilecek mail þablonu ayarlanýr.
+         Burada tanýmladýðým deðiþkenler appsetting'e taþýndý
+         appsettingdeki deðerleri okumak için EmailVerifyModel oluþturuldu.Deðerler bu EmailVerifyModeldeki deðiþkenlerde tutulur.
+         
+    Services klasörü:
+        Models:
+            EmailVerifyModel.cs -> appsettingdeki EmailVerifyModel deki deðerleri tutmak için oluþturuldu.(Email Þablonu için)
+            OrganikHaberleþmeModel.cs -> appsettingdeki OrganikHaberlesmeModel deki deðerleri tutmak için oluþturuldu.Kullanýlacak api ve apiKey deðerleri tutulur.
+        Abstact:
+            IOneTimePasswordService.cs -> tek bir Interface oluþturup, hem SmsService'e hem EmailService'e implement edildi. "SendOtp" metotu ortak olduðu için.**SOLID deki Interface Segration özelliði kullanýlmýþ oldu**
+            ISendOtpServiceFactory.cs -> Burada tanýmlanan ***CreateSendOtpService*** metotuyla (Postacý) yönlendirme yapýlýr.Bu metot "IOneTimePasswordService" interface'i tipinde sonuç döner.(Çünkü EmailService ve SmsService bu Inteface'i implement ediliyor)
+                      channel:1 -> "onaykodu" "Mail" -> EmailService' e gider
+                      channel:2 -> "onaykodu" "Sms"  -> SmsService'e gider
+        Concrete:
+            SendOtpServiceFactory.cs-> ISendOtpServiceFactory interfacinden implemnet ediliyor.Buradaki CreateSendOtpService metotuna gelen Channel deðerine göre -> EmailService'e yada SmsService'e gönderir
+            EmailService.cs-> SendOtp metotyla Email þablonu gönderilir.Ve sonuç true döner
+            SmsService.cs-> SendOtp metotyla organikhaberleþmeApisi kullanýlarak mesajý ve alýcý numaralarýný kullanarak OTP gönderme iþlemini gerçekleþtirir.
+
+
+
+##############################  
+###  SendOtpJob.cs  ### 
+
+// OTP'lerin tutulduðu tablomuz var.(TwoFactorAuthenticationTransaction tablosu)
+// Tablodaki IsSend (Gönderildi/Gönderilmedi bilgisi) alanýna göre, gönderilmeyen OTP'leri, listeliyoruz.
+// Listede sadece gönderilmeyen OTP'ler elde edilir ve döngüye girilir.
+// Döngüde sýrasýyla OTP'lere ait channel deðerine bakýlýr.
+//Kurduðumuz factory servisine göre mail ya da sms servislerine yönlendirilir. Yönlendirme iþlemi channel parametresi ile saðlanýr.
+//To deðerinin alýnmasý için ise, OTP bilgisinden dönen user Id'ye göre user bilgisi elde edilir.
+//OTP channel deðerine göre targets listesine (mail ise kullanýcýnýn maili, sms ise kullanýcýnýn telefon numarasý eklenir.)
+//Alýnan mail veya telefon numarasý bilgisinden sonra, factoryden elde edilen bilgiler ile otp gönderim aþamasýna gelinir. (Bu kýsýmda servis hangi kanaldan göndereceðini biliyor. (SMS/MAÝL)) - Dependecy Inversion (SOLID - D)
+//SendOtp çaðrýldýðýnda ise elimizdeki targets listesindeki deðerlere OTP bilgisindeki 6 haneli onetimepassword gönderilir
+// Gönderildikten sonra ise ilgili OTP'ye ait isSend deðeri true olarak iþaretlenir ve döngüde varsa diðer OTP'ler için iþlemler ayný þekilde devam eder.
+
+    
 
 
 
