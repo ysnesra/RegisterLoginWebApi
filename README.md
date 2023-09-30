@@ -39,8 +39,7 @@ IdentityServer yapısı ve Hangfire kullanılarak Authenticate işlemi yapılmı
 |  |  |
 
 ![5loginResponse](https://github.com/ysnesra/RegisterLoginWebApi/assets/104023688/43dea836-3275-4eba-9cae-e2fe927927ef)
-|--|--|
-|  |  |
+
 
 NUNIT TEST
 
