@@ -1,13 +1,8 @@
 ﻿using Application.Features.Auths.Commands;
 using Application.Features.Auths.Dtos;
-using Core.Security.Identity;
 using Core.Security.Dtos;
-using Core.Security.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Core.Security.Enums;
 
 namespace WebApi.Controller
 {
@@ -15,7 +10,10 @@ namespace WebApi.Controller
     [ApiController]
     public class AuthController : BaseController
     {
-        
+        public AuthController(IMediator mediator) : base(mediator)
+        {
+        }
+
         /// <summary>
         /// Kullanıcı kayıt işlemini yapar.
         /// </summary>
